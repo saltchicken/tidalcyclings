@@ -30,5 +30,8 @@ do
         , ("ply", ply 2)
         ]
   d1 $ ur 4 (
-    "[arp:chord, bass:stutter, drums] [arp:stutter, bass2:echo5th, drums] [arp:chord, bass3:ply, drums] [break:fill, bass:reverse]"
+    "[arp:chord, bass:stutter, drums] \
+    \[arp:stutter, bass2:echo5th, drums] \
+    \[arp:chord, bass3:ply, drums] \
+    \[break:fill, bass:reverse]"
     ) parts fx
