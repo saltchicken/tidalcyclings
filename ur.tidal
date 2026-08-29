@@ -1,0 +1,14 @@
+setcps (0.5)
+
+let parts = [ ("bass", note "a3 ~ c3 e3" # r2), ("lead", note "a3" # r1), ("arp", struct "[t ~ t t]*4" $ note "a3" # r3) ]
+
+let fx = [ ("fill", fast 2 . (# gain 1.1))
+         , ("slowdown", slow 2)
+         , ("highpass", (# cutoff 1200))
+         ]
+
+d1 $ ur 8
+  "[bass] [bass, arp] [bass, lead, arp] [lead:slowdown]"
+  parts
+  fx
+

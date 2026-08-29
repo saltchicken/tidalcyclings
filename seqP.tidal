@@ -1,0 +1,16 @@
+setcps (0.5)
+
+d1 $ seqPLoop [
+    (0, 16, stack [ bd "1", sn "~ 1 ~ 1", oh "~ ~ 1 ~", mt "1 1"] # r10),
+    -- (0, 16, midinote (drumNote "bd bd bd bd") # r10),
+    (0, 16, note "a2 ~ c3 e3" # r2),
+    (12, 16, note (scale "majPent" (run 8)) |+ note "a4" # r1),
+    (4, 12, struct "[t ~ t t]*4" $ note "a3" # r3)
+]
+
+d1 $ seqPLoop [
+    (0, 16, midinote (drumNote "ch ch") # r10),
+    (0, 16, note "a2 ~ c3 e3" # r2),
+    (12, 16, note (scale "majPent" (run 8)) |+ note "a4" # r1),
+    (4, 12, struct "[t ~ t t]*4" $ note "a3" # r3)
+]
