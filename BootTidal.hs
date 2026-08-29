@@ -28,33 +28,19 @@ instance Tidally where tidal = tidalInst
 
 
 :{
-let r1 = s "rust" # midichan 0
-    r2 = s "rust" # midichan 1
-    r3 = s "rust" # midichan 2
-    r10 = s "rust" # midichan 9
+let lead = s "rust" # midichan 0
+    bass = s "rust" # midichan 1
+    pluck = s "rust" # midichan 2
+    drums = s "rust" # midichan 9
 
-    bd pat = midinote (pat + 35) # r10
-    sn pat = midinote (pat + 37) # r10
-    ch pat = midinote (pat + 41) # r10
-    oh pat = midinote (pat + 45) # r10
-    cp pat = midinote (pat + 38) # r10
-    lt pat = midinote (pat + 40) # r10
-    mt pat = midinote (pat + 44) # r10
-    ht pat = midinote (pat + 47) # r10
-
-    drumMap = [ ("bd", 36)
-              , ("sn", 38)
-              , ("ch", 42)
-              , ("oh", 46)
-              , ("cp", 39)
-              , ("lt", 41)
-              , ("mt", 45)
-              , ("ht", 48)
-              ]
-              
-    drumNote pat = unwrap $ (\name -> maybe 0 id (lookup name drumMap)) <$> pat
+    bd pat = midinote (pat + 35) # drums
+    sn pat = midinote (pat + 37) # drums
+    ch pat = midinote (pat + 41) # drums
+    oh pat = midinote (pat + 45) # drums
+    cp pat = midinote (pat + 38) # drums
+    lt pat = midinote (pat + 40) # drums
+    mt pat = midinote (pat + 44) # drums
+    ht pat = midinote (pat + 47) # drums
 
     metro = p "metronome" $ midinote "42" # r10
-
 :}
-

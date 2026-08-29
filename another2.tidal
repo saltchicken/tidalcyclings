@@ -1,0 +1,34 @@
+do
+  setcps (135/60/4)
+  let parts = 
+        [ -- Bass 1: 8-step groove with rests and an alternating tail (<3 5> changes every cycle)
+          ("bass", note (scale "minor" "0 [~ 2] -2 <3 5> 0 -4 [~ 2] <0 -1>" |+ "c4") # bass)
+          
+          -- Bass 2: Syncopated walking feel that alternates root notes across 2 bars
+        , ("bass2", note (scale "minor" "<0 -2> 5 3 [2 ~] <0 2> [~ 3] <5 4> 2" |+ "c4") # bass)
+        
+          -- Bass 3 (New): A 16-step generative bassline using 'palindrome' to play forward then backward
+        , ("bass3", note (palindrome $ scale "minor" "0 2 3 5 -2 0 7 5" |+ "c4") # bass)
+        
+        , ("lead", note "a4(3,8) e4(3,8,2)" # lead)
+        , ("arp", struct "[t ~ t t]*4" $ note (scale "minor" "0 2 4 7" |+ "f5") # pluck)
+        , ("drums", stack [ bd "1*4", ch "1*8", struct "~ t ~ ~" $ sn "1" ])
+        , ("break", stack [ bd "1(3,8)", fast 2 $ ch "1", struct "~ t ~ ~" $ cp "1" ])
+        ]
+      fx = 
+        [ ("fill", fast 2)
+        , ("slowdown", slow 2)
+        , ("octup", (|+ note 12)) 
+        , ("octdown", (|- note 12)) 
+        , ("stutter", stut 4 0.6 (1/16))
+        , ("reverse", rev)
+        , ("echo5th", off 0.25 (|+ note 7))
+        , ("chord", superimpose (|+ note 7))
+        , ("staccato", (# legato 0.25))
+        , ("sustain", (# legato 2))
+        , ("rolling", chunk 4 (fast 2))
+        , ("ply", ply 2)
+        ]
+  d1 $ ur 4 (
+    "[arp:chord, bass:stutter, drums] [arp:stutter, bass2:echo5th, drums] [arp:chord, bass3:ply, drums] [break:fill, bass:reverse]"
+    ) parts fx

@@ -1,0 +1,48 @@
+setcps(0.6)
+
+resetCycles
+
+d1 $ seqPLoop [
+    -- ==========================================
+    -- INTRO (Cycles 0 to 8)
+    -- ==========================================
+    -- Evolving hi-hats and a simple chord progression on the pluck
+    (0, 8, ch "1*8" # velocity "0.6 0.8"),
+    (0, 8, note "<a4 f4 c4 g4>" # pluck),
+
+    -- ==========================================
+    -- BUILD (Cycles 8 to 16)
+    -- ==========================================
+    -- Introduce the kick, snare, and bassline. 
+    -- The lead comes in at cycle 12 to build tension.
+    (8, 16, stack [ 
+        bd "1 1 1 1", 
+        sn "~ 1 ~ 1", 
+        ch "1*16" # velocity "0.7"
+    ]),
+    (8, 16, note "<a3 f3 c3 g3>" # bass), 
+    (12, 16, note (scale "majPent" (run 8)) |+ note "a4" # lead), 
+
+    -- ==========================================
+    -- DROP (Cycles 16 to 24)
+    -- ==========================================
+    -- Full energy. Syncopated bass, dense drums, and a chaotic lead.
+    (16, 24, stack [ 
+        bd "1 <~ 1> 1 1",   -- Kick variation every other cycle
+        sn "~ 1 ~ 1", 
+        oh "~ ~ 1 ~", 
+        ch "1*[8 16]",      -- Hats alternate between 8ths and 16ths
+        mt "1 1" 
+    ]),
+    (16, 24, note "<a2 f2 c2 g2>(3,8)" # bass),             -- Euclidean rhythm on bass
+    (16, 24, struct "[t ~ t t]*4" $ note "<a3 c4>" # pluck),-- Your original pluck rhythm
+    (16, 24, jux rev $ note (scale "minPent" (irand 8)) |+ note "a4" # lead), -- Generative lead
+
+    -- ==========================================
+    -- OUTRO (Cycles 24 to 32)
+    -- ==========================================
+    -- Strip everything back to just the kick and a fading bass note.
+    (24, 32, bd "1(3,8)"),
+    (24, 32, note "<a2 ~ ~ ~>" # bass)
+]
+
