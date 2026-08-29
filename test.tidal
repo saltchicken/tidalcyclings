@@ -1,9 +1,9 @@
 setcps (135/60/4)
 
 let parts = 
-      [ ("bass", note "a2 ~ c3 e3" # r2)
-      , ("lead", note "a4(3,8) e4(3,8,2)" # r1)
-      , ("arp", struct "[t ~ t t]*4" $ note (scale "minor" "0 2 4 7") # r3)
+      [ ("bass", note "a2 ~ c3 e3" # bass)
+      , ("lead", note "a4(3,8) e4(3,8,2)" # lead)
+      , ("arp", struct "[t ~ t t]*4" $ note (scale "minor" "0 2 4 7" |+ "f5") # pluck)
       , ("drums", stack [ bd "1*4", ch "1*8", struct "~ t ~ ~" $ sn "1" ])
       , ("break", stack [ bd "1(3,8)", fast 2 $ ch "1", struct "~ t ~ ~" $ cp "1" ])
       ]
@@ -17,7 +17,13 @@ let parts =
       , ("crush", (# crush 4))
       ]
 
-d1 $ ur 8 (
-  "[bass:fill] [bass, arp] [bass, arp, drums] [break:fill, arp:octup]\
-  \[bass, lead, arp, drums] [bass, lead:stutter, arp, drums] [bass, lead:jux, break:fill, arp] [arp:slowdown]"
+d1 $ ur 32 (
+  "[bass] [bass] [bass:fill] [bass, arp] \
+  \[bass, arp] [bass, arp] [bass, arp, break:fill] [bass, arp, drums] \
+  \[bass, arp, drums] [bass, arp, drums] [bass, arp, break:fill] [bass, lead, arp, drums] \
+  \[bass, lead, arp, drums] [bass, lead:stutter, arp, drums] [bass, lead:jux, arp, drums] [break:fill, arp:octup] \
+  \[bass, lead, arp, drums] [bass, lead, arp, drums] [bass, lead:stutter, arp, drums] [bass, lead, break:fill, arp] \
+  \[bass, lead:jux, arp:octup, drums] [bass, lead:jux, arp:octup, drums] [bass, lead:stutter, break, arp:octup] [break:fill, arp:slowdown] \
+  \[bass, arp, drums] [bass, arp, drums] [bass, arp] [bass, arp:slowdown] \
+  \[bass] [bass:fill] [arp:slowdown] ~"
 ) parts fx
