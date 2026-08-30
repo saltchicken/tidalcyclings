@@ -1,5 +1,6 @@
 do
-  setcps (135/60/4)
+  -- p "tempo" $ cps (135/60/4)
+  interpolateIn "tempo" 2 $ cps(135/60/4)
   let parts = 
         [ -- Bass 1: 8-step groove with rests and an alternating tail (<3 5> changes every cycle)
           ("bass", note (scale "minor" "0 [~ 2] -2 <3 5> 0 -4 [~ 2] <0 -1>" |+ "c4") # bass)

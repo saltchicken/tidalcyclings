@@ -1,5 +1,5 @@
 do
-  setcps (128/60/4)
+  interpolateIn "tempo" 2 $ cps (128/60/4)
   let parts = 
         [ -- Bass 1: Steady, driving off-beat house bass
           ("bass", note (scale "dorian" "~ 0 ~ -1 ~ 2 ~ -2" |+ "d3") # bass)
@@ -36,7 +36,7 @@ do
         , ("shift", iter 4) -- Shifts the pattern starting point 
         , ("jumble", jux rev) -- Plays reverse on one side (if MIDI pan is mapped)
         ]
-  d1 $ ur 8 (
+  xfadeIn 1 4 $ ur 8 (
     "[pad, bass, drums, arp:staccato] \
     \[pad, bass2:echoOct, drums, arp:shift] \
     \[pad, bass:octdown, drums, arp:delay, lead:echo5th] \

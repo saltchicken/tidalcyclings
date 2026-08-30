@@ -1,6 +1,6 @@
 do
   -- Dropped to 85 BPM for a moody, trip-hop/downtempo feel
-  setcps (85/60/4)
+  interpolateIn "tempo" 2 $ cps (85/60/4)
   let parts = 
         [ -- Bass 1: Sparse, heavy, leaving lots of space
           ("bass", note (scale "minor" "0 ~ ~ -2" |+ "c2") # bass)
@@ -37,7 +37,7 @@ do
         , ("shift", iter 4) 
         , ("jumble", jux rev) 
         ]
-  d1 $ ur 8 (
+  xfadeIn 1 4 $ ur 8 (
     "[pad, bass, drums, chords:staccato] \
     \[pad, bass, drums, chords:dubdelay, lead] \
     \[pad, bass2, drums:drop, chords:staccato] \
