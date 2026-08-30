@@ -25,7 +25,7 @@ START_PATTERN = r"""do
 """
 
 class TidalController:
-    def __init__(self, boot_file="BootTidal.hs"):
+    def __init__(self, boot_file="~/.config/tidal/BootTidal.hs"):
         print("Starting GHCi and booting TidalCycles...")
         # Spawn the GHCi process
         self.ghci = subprocess.Popen(
