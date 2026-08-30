@@ -36,7 +36,7 @@ do
         , ("shift", iter 4) -- Shifts the pattern starting point 
         , ("jumble", jux rev) -- Plays reverse on one side (if MIDI pan is mapped)
         ]
-  xfadeIn 1 4 $ ur 8 (
+  xfadeIn 1 2 $ ur 8 (
     "[pad, bass, drums, arp:staccato] \
     \[pad, bass2:echoOct, drums, arp:shift] \
     \[pad, bass:octdown, drums, arp:delay, lead:echo5th] \

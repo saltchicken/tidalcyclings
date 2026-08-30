@@ -1,5 +1,4 @@
 do
-  -- p "tempo" $ cps (135/60/4)
   interpolateIn "tempo" 2 $ cps(135/60/4)
   let parts = 
         [ -- Bass 1: 8-step groove with rests and an alternating tail (<3 5> changes every cycle)
@@ -30,7 +29,7 @@ do
         , ("rolling", chunk 4 (fast 2))
         , ("ply", ply 2)
         ]
-  d1 $ ur 4 (
+  xfadeIn 1 2 $ ur 2 (
     "[arp:chord, bass:stutter, drums] \
     \[arp:stutter, bass2:echo5th, drums] \
     \[arp:chord, bass3:ply, drums] \

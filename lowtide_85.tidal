@@ -37,7 +37,7 @@ do
         , ("shift", iter 4) 
         , ("jumble", jux rev) 
         ]
-  xfadeIn 1 4 $ ur 8 (
+  xfadeIn 1 2 $ ur 8 (
     "[pad, bass, drums, chords:staccato] \
     \[pad, bass, drums, chords:dubdelay, lead] \
     \[pad, bass2, drums:drop, chords:staccato] \

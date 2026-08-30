@@ -1,0 +1,48 @@
+do
+  -- 170 BPM for a fast, driving Drum & Bass / Jungle feel
+  interpolateIn "tempo" 2 $ cps (170/60/4)
+  
+  let parts = 
+        [ -- Bass 1: Driving sub-bass rhythm, sparse but heavy, playing around F minor
+          ("bass", note (scale "minor" "0 ~ ~ -2 ~ 0 ~ <3 -1>" |+ "f2") # bass)
+          
+          -- Bass 2: Syncopated turnaround with a walk up
+        , ("bass2", note (scale "minor" "0 ~ 0 ~ -2 ~ 5 4" |+ "f2") # bass)
+          
+          -- Pad: Ethereal and sustained minor 9th chords, changing very slowly
+        , ("pad", slow 4 $ note "<[f3, ab3, c4, eb4] [db3, f3, ab3, c4]>" # drone # legato 1.5)
+          
+          -- Arp: Fast, swirling 16th note arpeggios that dance around the root
+        , ("arp", struct "t(11,16)" $ note (scale "minor" "<0 2 4> 7 2 5" |+ "f4") # pluck)
+          
+          -- Lead: Melancholic, sparse top melody with a repeating rhythm
+        , ("lead", struct "~ t ~ t(3,8)" $ note (scale "minor" "7 <8 5> 4" |+ "f5") # lead)
+
+          -- Drums: Classic 170 BPM 2-step / half-time feel
+        , ("drums", stack [ bd "1 ~ ~ ~ ~ 1 ~ ~", sn "~ ~ 1 ~ ~ ~ 1 ~", ch "1*8", oh "~ ~ ~ 1 ~ ~ ~ 1" ])
+          
+          -- Break: Amen-style chops with ghost snares and frantic hi-hats
+        , ("break", stack [ bd "1 ~ ~ 1 ~ ~ 1 ~", sn "~ 1 1 ~ ~ 1 ~ 1", ch "1*16", oh "~ 1 ~ ~ ~ 1 ~ ~" ])
+        ]
+        
+      fx = 
+        [ ("fill", fast 2)
+        , ("halftime", slow 2)
+        , ("octup", (|+ note 12)) 
+        , ("octdown", (|- note 12)) 
+        , ("stutter", stut 4 0.6 (1/16)) -- 16th note glitching
+        , ("echoOct", off 0.25 (|+ note 12)) 
+        , ("chord", superimpose (|+ note 7))
+        , ("staccato", (# legato 0.2))
+        , ("sustain", (# legato 2))
+        , ("shift", iter 4) 
+        , ("jumble", jux rev) 
+        ]
+        
+  -- A 32-bar evolution crossfading over 4 cycles when triggered
+  xfadeIn 1 4 $ ur 8 (
+    "[pad, bass, drums, arp:staccato] \
+    \[pad, bass, drums:stutter, arp, lead:echoOct] \
+    \[pad, bass2:octup, drums, arp:chord] \
+    \[pad:sustain, break, bass:jumble, lead:shift]"
+    ) parts fx

@@ -1,0 +1,17 @@
+do
+  -- Set tempo track to 60 BPM
+  p "tempo" $ cps (60/60/4)
+  
+  let parts = 
+        [ ("drums", bd "1*4")
+        , ("bass", slow 8 $ note "c3*4" # bass # legato 0.1)
+        ]
+        
+      fx = 
+        [ ("fill", fast 2) ]
+        
+  -- Call the pattern on d1
+  d1 $ ur 2 (
+    "[drums, bass] \
+    \[drums:fill, bass]"
+    ) parts fx
