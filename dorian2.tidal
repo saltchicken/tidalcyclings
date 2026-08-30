@@ -1,0 +1,44 @@
+do
+  interpolateIn "tempo" 2 $ cps (128/60/4)
+  let parts = 
+        [ -- Bass 1: Driving off-beat pattern in a new key (E dorian)
+          ("bass", note (scale "dorian" "~ 0 ~ -1 ~ 2 ~ -2" |+ "e3") # bass)
+          
+          -- Bass 2: Syncopated acid-style turnaround
+        , ("bass2", note (scale "dorian" "0 [~ 3] -1 [2 ~] <4 5> 0 [~ -2] 0" |+ "e3") # bass)
+          
+          -- Pluck: Evolving 16th note arpeggio
+        , ("arp", struct "t(11,16)" $ note (scale "dorian" "<0 2> 4 <5 7> 2" |+ "e4") # pluck)
+        
+          -- Lead: Sparse, atmospheric stabs 
+        , ("lead", struct "~ ~ t ~" $ note "<e5 g5 b5 d6>" # lead)
+
+          -- Drone: Deep underlying root pad in E
+        , ("pad", slow 16 $ note "<[e3, g3] [fs3, a3]>" # drone # legato 1)
+          
+          -- Standard 4-on-the-floor house beat
+        , ("drums", stack [ bd "1*4", ch "~ 1 ~ 1", cp "~ 1 ~ 1" ])
+          
+          -- Heavy break with toms and open hats for transitions
+        , ("break", stack [ bd "1(3,8)", lt "1 ~ 1 ~", ht "~ 1 ~ 1", fast 2 $ sn "1" ])
+        ]
+      fx = 
+        [ ("fill", fast 2)
+        , ("halftime", slow 2)
+        , ("octup", (|+ note 12)) 
+        , ("octdown", (|- note 12)) 
+        , ("delay", stut 3 0.6 (1/8))
+        , ("echo5th", off 0.25 (|+ note 7))
+        , ("echoOct", off 0.125 (|+ note 12))
+        , ("chord", superimpose (|+ note 7))
+        , ("staccato", (# legato 0.2))
+        , ("sustain", (# legato 2))
+        , ("shift", iter 4)
+        , ("jumble", jux rev)
+        ]
+  xfadeIn 1 2 $ ur 8 (
+    "[pad, bass, drums, arp:staccato] \
+    \[pad, bass2:echoOct, drums, arp:shift] \
+    \[pad, bass:octdown, drums, arp:delay, lead:echo5th] \
+    \[pad, break:fill, arp:jumble, lead:chord]"
+    ) parts fx
