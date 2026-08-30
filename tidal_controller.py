@@ -4,6 +4,26 @@ import time
 import sys
 from pathlib import Path
 
+# Embedded priming pattern (using a raw string to preserve Tidal's backslashes)
+START_PATTERN = r"""do
+  -- Set tempo track to 60 BPM
+  p "tempo" $ cps (60/60/4)
+  
+  let parts = 
+        [ ("drums", bd "1*4")
+        , ("bass", slow 8 $ note "c3*4" # bass # legato 0.1)
+        ]
+        
+      fx = 
+        [ ("fill", fast 2) ]
+        
+  -- Call the pattern on d1
+  d1 $ ur 2 (
+    "[drums, bass] \
+    \[drums:fill, bass]"
+    ) parts fx
+"""
+
 class TidalController:
     def __init__(self, boot_file="BootTidal.hs"):
         print("Starting GHCi and booting TidalCycles...")
@@ -46,20 +66,24 @@ class TidalController:
     def play_file(self, filepath):
         try:
             with open(filepath, 'r') as f:
-                print(f"Transitioning to: {filepath}")
+                print(f"Playing: {filepath}")
                 self.send_command(f.read())
         except FileNotFoundError:
             print(f"Error: Could not find {filepath}")
+
 
 if __name__ == "__main__":
     # Initialize the controller
     tidal = TidalController()
     
+    # Send the embedded pattern immediately after boot
+    print("\nPriming system at 60 BPM...")
+    tidal.send_command(START_PATTERN)
+    
     while True:
         print("\n--- Tidal Set Controller ---")
         
         # Dynamically find all .tidal files in the current directory
-        # Sort them alphabetically for a consistent menu
         tidal_files = sorted(Path('.').glob('*.tidal'))
         
         if not tidal_files:
@@ -70,13 +94,18 @@ if __name__ == "__main__":
                 display_name = file_path.stem.replace('_', ' ').title()
                 print(f"Press {idx}: {display_name}")
                 
+        print("\nType 'r' to refresh the list")
         print("Type 'q' to quit")
         
-        choice = input("\nSelect a track to transition into: ")
+        choice = input("\nSelect an action: ")
         
         if choice.lower() == 'q':
             print("Exiting...")
             sys.exit(0)
+            
+        if choice.lower() == 'r':
+            print("Refreshing file list...")
+            continue
             
         if choice.isdigit():
             index = int(choice) - 1
@@ -86,4 +115,4 @@ if __name__ == "__main__":
             else:
                 print("Invalid choice: Number out of range.")
         else:
-            print("Invalid input: Please enter a number or 'q'.")
+            print("Invalid input: Please enter a number, 'r', or 'q'.")
