@@ -1,0 +1,44 @@
+do
+  interpolateIn "tempo" 2 $ cps (85/60/4)
+  let parts = 
+        [ -- Bass 1: Sub-heavy, leaving lots of breathing room
+          ("bass", note (scale "minor" "0 ~ ~ -3" |+ "g2") # bass)
+          
+          -- Bass 2: A syncopated turnaround for the end of phrases
+        , ("bass2", note (scale "minor" "0 ~ -1 -3 ~ 2 0 ~" |+ "g2") # bass)
+          
+          -- Chords: Dubby, off-beat minor stabs
+        , ("chords", struct "~ t ~ ~" $ note (scale "minor" "[0, 2, 4]" |+ "g3") # pluck)
+        
+          -- Lead: Melancholic, fragmented echoes
+        , ("lead", struct "~ ~ ~ t(3,8)" $ note (scale "minor" "<4 7 5 2>" |+ "g4") # lead)
+
+          -- Pad: Dark, brooding drone that shifts every 2 cycles
+        , ("pad", slow 8 $ note "<[g3, bb3, d4] [f3, a3, c4]>" # drone # legato 1.5)
+          
+          -- Drums: Sluggish and heavy groove, using claps instead of snares
+        , ("drums", stack [ bd "1 ~ ~ <~ 1>", cp "~ ~ 1 ~", ch "1*8", oh "~ ~ ~ 1" ])
+          
+          -- Break: Syncopated ghost hits and scattered toms
+        , ("break", stack [ bd "1(3,8)", cp "~ 1 ~ <1 ~>", ch "1(11,16)", lt "~ 1 ~ ~", mt "~ ~ 1 ~" ])
+        ]
+      fx = 
+        [ ("fill", fast 2)
+        , ("drop", slow 2)
+        , ("octup", (|+ note 12)) 
+        , ("octdown", (|- note 12)) 
+        , ("dubdelay", stut 4 0.65 (3/16)) -- Classic dub dotted-eighth delay
+        , ("echoOct", off 0.25 (|+ note 12)) 
+        , ("echo5th", off 0.375 (|+ note 7)) 
+        , ("chord", superimpose (|+ note 7))
+        , ("staccato", (# legato 0.2))
+        , ("sustain", (# legato 2))
+        , ("shift", iter 4) 
+        , ("jumble", jux rev) 
+        ]
+  xfadeIn 1 2 $ ur 8 (
+    "[pad, bass, drums, chords:dubdelay] \
+    \[pad, bass, drums, chords:staccato, lead:echo5th] \
+    \[pad, bass2, drums:drop, chords:dubdelay] \
+    \[pad, break, bass2:octup, lead:shift, chords:jumble]"
+    ) parts fx
