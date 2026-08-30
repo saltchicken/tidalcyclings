@@ -1,0 +1,49 @@
+do
+  -- 120 BPM Melodic / Evolving Techno
+  interpolateIn "tempo" 2 $ cps (120/60/4)
+  
+  let parts = 
+        [ -- Bass 1: A generative bassline using 'fit'. 
+          -- With 6 items and an offset of 2, it weaves unpredictably through the notes.
+          ("bass", note (fit 2 [0, -2, 3, 0, 5, 7] "0 ~ 1 2 ~ 3 4 5" |+ "a2") # bass)
+          
+          -- Bass 2: A rigid, driving 16th-note bass for the climax
+        , ("bass2", struct "t(11,16)" $ note (scale "minor" "0" |+ "a2") # bass)
+          
+          -- Arp: The star of the show. 'fit' climbs through an extended minor 7th chord.
+          -- Offset of 1 against 7 items means it takes 7 cycles to fully reset.
+        , ("arp", struct "t(11,16)" $ note (fit 1 [0, 3, 7, 10, 12, 15, 19] "0 2 1 3 [~ 4] 2 <3 5> 1" |+ "a3") # pluck)
+          
+          -- Lead: A sparse, ethereal melody that also evolves slowly
+        , ("lead", struct "~ t ~ t(3,8)" $ note (fit 1 [0, 2, 4, 7, 9] "0 1 ~ 2" |+ "a4") # lead)
+
+          -- Pad: Deep underlying minor chord progression
+        , ("pad", slow 8 $ note "<[a3, c4, e4] [f3, a3, c4]>" # drone # legato 1)
+          
+          -- Drums: Driving techno beat
+        , ("drums", stack [ bd "1*4", ch "~ 1 ~ 1", cp "~ ~ 1 ~", oh "~ ~ ~ 1" ])
+          
+          -- Break: Syncopated, rolling percussion
+        , ("break", stack [ bd "1(3,8)", sn "~ 1 ~ <1 ~>", ch "1*4", lt "~ 1 ~ ~", mt "~ ~ 1 ~" ])
+        ]
+        
+      fx = 
+        [ ("fill", fast 2)
+        , ("halftime", slow 2)
+        , ("octup", (|+ note 12)) 
+        , ("octdown", (|- note 12)) 
+        , ("stutter", stut 4 0.6 (1/16))
+        , ("echo5th", off 0.25 (|+ note 7))
+        , ("chord", superimpose (|+ note 7))
+        , ("staccato", (# legato 0.2))
+        , ("sustain", (# legato 2))
+        , ("shift", iter 4) 
+        ]
+        
+  -- A 32-bar evolution crossing over 8 cycles
+  xfadeIn 1 2 $ ur 8 (
+    "[pad, bass, drums, arp:staccato] \
+    \[pad, bass:octdown, drums, arp:echo5th, lead] \
+    \[pad, bass2, drums, arp:shift, lead:chord] \
+    \[pad, break:fill, bass:octup, arp:stutter, lead:shift]"
+    ) parts fx

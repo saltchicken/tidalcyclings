@@ -1,0 +1,45 @@
+do
+  -- 140 BPM Rave / Acid Breaks
+  interpolateIn "tempo" 2 $ cps (140/60/4)
+  
+  let parts = 
+        [ -- Bass 1: Fast 16th note Phrygian acid line with alternating tail ends
+          ("bass", note (scale "phrygian" "0 1 0 3 0 1 <0 -2> <5 7>" |+ "e2") # bass)
+          
+          -- Bass 2: A heavier, quarter-note marching bassline for the breakdown
+        , ("bass2", note (scale "phrygian" "0*4 3*4 5*4 7*4" |+ "e2") # bass)
+          
+          -- Pluck: Syncopated melody locking into the drum break
+        , ("pluck", struct "t(11,16)" $ note (scale "phrygian" "0 3 5 7" |+ "e4") # pluck)
+          
+          -- Lead: Slow, sweeping siren-like notes
+        , ("lead", slow 2 $ note "<e5 g5 b5 d6>" # lead)
+
+          -- Pad: Tense underlying chords
+        , ("pad", slow 8 $ note "<[e3, g3, b3] [f3, a3, c4]>" # drone # legato 1)
+          
+          -- Drums: Chopped up amen-style rhythm
+        , ("drums", stack [ bd "1 ~ ~ 1 ~ ~ 1 ~", sn "~ 1 ~ ~ 1 ~ <1 ~> 1", ch "1*8", oh "~ ~ 1 ~ ~ 1 ~ 1" ])
+          
+          -- Break: Straight-forward stomping beat with heavy toms
+        , ("break", stack [ bd "1(3,8)", sn "~ 1 ~ 1", fast 2 $ ch "1", lt "1 ~ 1 ~", ht "~ 1 ~ 1" ])
+        ]
+        
+      fx = 
+        [ ("fill", fast 2)
+        , ("halftime", slow 2)
+        , ("octup", (|+ note 12)) 
+        , ("acid", (# legato 0.8) . (|+ note 12)) 
+        , ("glitch", stut 4 0.6 (1/16))
+        , ("echo5th", off 0.25 (|+ note 7))
+        , ("staccato", (# legato 0.2))
+        , ("rolling", chunk 4 (fast 2)) -- Rolls every 4th cycle at double speed
+        , ("jumble", jux rev)
+        ]
+        
+  xfadeIn 1 2 $ ur 8 (
+    "[pad, bass:acid, drums, pluck:staccato] \
+    \[pad, bass:rolling, drums, pluck:echo5th] \
+    \[pad, bass2:acid, break, lead:glitch] \
+    \[pad, bass:jumble, break:fill, lead:octup, pluck:glitch]"
+    ) parts fx

@@ -1,0 +1,40 @@
+do
+  -- 65 BPM for slow, evolving ambient
+  interpolateIn "tempo" 2 $ cps (65/60/4)
+  
+  let parts = 
+        [ -- Bass: Extremely slow, acting as a sub-foundation
+          ("bass", slow 2 $ note "c2 ~ ~ ~" # bass)
+          
+          -- Pluck: Soft, repeating arpeggios that wander through the scale
+        , ("pluck", struct "t(5,8)" $ note (fit 1 [0, 2, 4, 7, 9] "0 1 2 3" |+ "c4") # pluck)
+          
+          -- Drone: The main element. Massive, slow-moving chords
+        , ("drone", slow 4 $ note "<[c3, e3, g3, b3] [a2, c3, e3, g3]>" # drone # legato 2.5)
+          
+          -- Lead: A delicate, melancholic melody
+        , ("lead", struct "~ t(3,8) ~ ~" $ note (palindrome $ scale "major" "0 2 4 7 5" |+ "c5") # lead)
+
+          -- Drums: Barely there. A soft kick and occasional tom
+        , ("drums", stack [ bd "1 ~ ~ ~", lt "~ ~ ~ 1" ])
+          
+          -- Break: Introduces a very sparse hi-hat layer
+        , ("break", stack [ bd "1 ~ ~ ~", oh "~ 1 ~ ~", mt "~ ~ 1 ~" ])
+        ]
+        
+      fx = 
+        [ ("reverse", rev)
+        , ("octup", (|+ note 12)) 
+        , ("octdown", (|- note 12)) 
+        , ("widen", jux (iter 4)) -- Pushes the pattern out of phase between the left and right speakers
+        , ("delay", stut 6 0.7 (3/16)) 
+        , ("echo5th", off 0.5 (|+ note 7)) -- Half-note delay
+        , ("sustain", (# legato 3))
+        ]
+        
+  xfadeIn 1 4 $ ur 8 (
+    "[drone:sustain, bass, pluck:widen] \
+    \[drone:sustain, bass, drums, lead:widen] \
+    \[drone:sustain, break, pluck:delay, lead:echo5th] \
+    \[drone:reverse, bass:octup, lead:widen, pluck:echo5th]"
+    ) parts fx

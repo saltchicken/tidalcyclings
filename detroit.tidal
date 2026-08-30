@@ -1,0 +1,43 @@
+do
+  -- 135 BPM for driving, classic Detroit Techno
+  interpolateIn "tempo" 2 $ cps (135/60/4)
+  
+  let parts = 
+        [ -- Bass 1: Relentless 16th note drive, shifting root notes every cycle
+          ("bass", struct "t*16" $ note "<d2 c2 a1 c2>" # bass)
+          
+          -- Bass 2: A sparser, funkier variation
+        , ("bass2", note (scale "minor" "0 0 ~ 0 ~ -2 ~ 3" |+ "d2") # bass)
+          
+          -- Chords: Complex, stacked stabs that shift rhythmically
+        , ("chords", struct "~ t ~ t ~ ~ t ~" $ note (scale "minor" "[0, 2, 4]" |+ "d4") # pluck)
+          
+          -- Lead: A fast, arpeggiated sequence that fades in and out
+        , ("lead", struct "t(11,16)" $ note (scale "minor" "0 2 4 5 7" |+ "d5") # lead)
+
+          -- Pad: Sweeping drone
+        , ("pad", slow 8 $ note "<[d3, f3, a3] [c3, e3, g3]>" # drone # legato 2)
+          
+          -- Drums: Standard 909-style driving beat
+        , ("drums", stack [ bd "1*4", cp "~ 1 ~ 1", ch "1(3,8)", oh "~ ~ 1 ~" ])
+          
+          -- Break: Ride-heavy breakdown
+        , ("break", stack [ bd "1 ~ 1 ~", ch "1*16", lt "1 ~ ~ ~", ht "~ ~ 1 ~" ])
+        ]
+        
+      fx = 
+        [ ("fill", fast 2)
+        , ("detune", superimpose (|+ note 0.1)) -- Slight detune for a thick analog synth feel
+        , ("octup", (|+ note 12)) 
+        , ("delay", stut 4 0.6 (1/8))
+        , ("echo5th", off 0.25 (|+ note 7))
+        , ("chord7", superimpose (|+ note 7) . superimpose (|+ note 10)) -- Stacks a minor 7th on top
+        , ("staccato", (# legato 0.3))
+        ]
+        
+  xfadeIn 1 2 $ ur 8 (
+    "[pad, bass:staccato, drums, chords:chord7] \
+    \[pad, bass:detune, drums, chords:delay] \
+    \[pad, bass2:octup, break, lead:echo5th] \
+    \[pad, bass:staccato, break:fill, chords:chord7, lead]"
+    ) parts fx

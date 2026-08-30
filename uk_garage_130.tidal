@@ -1,0 +1,44 @@
+do
+  -- 130 BPM for a bouncy, syncopated UK Garage feel
+  interpolateIn "tempo" 2 $ cps (130/60/4)
+  
+  let parts = 
+        [ -- Bass 1: Heavy, syncopated bass avoiding the 1 on the second bar
+          ("bass", note (scale "minor" "0 ~ ~ -2 ~ ~ 3 ~" |+ "f2") # bass)
+          
+          -- Bass 2: A walking turnaround
+        , ("bass2", note (scale "minor" "~ 0 ~ -1 ~ 2 0 ~" |+ "f2") # bass)
+          
+          -- Chords: Stabby, off-beat minor 7th chords
+        , ("chords", struct "~ t ~ ~ t ~ ~ ~" $ note (scale "minor" "[0, 2, 4, 7]" |+ "f3") # pluck)
+          
+          -- Lead: Chopped-up, vocal-style melody using fast repeating stutters
+        , ("lead", struct "~ ~ t(3,8) ~" $ note "f5 <ab5 c6>" # lead)
+
+          -- Pad: Warm, subtle background chords
+        , ("pad", slow 4 $ note "<[f3, ab3, c4] [eb3, g3, bb3]>" # drone # legato 1.5)
+          
+          -- Drums: Classic 2-step rhythm (kick on 1, delayed kicks, snare on 2 and 4)
+        , ("drums", stack [ bd "1 ~ ~ ~ ~ 1 ~ ~", cp "~ ~ ~ ~ 1 ~ ~ ~", ch "1*16", oh "~ ~ 1 ~ ~ 1 ~ 1" ])
+          
+          -- Break: A 4-on-the-floor house beat switch-up
+        , ("break", stack [ bd "1*4", cp "~ 1 ~ 1", fast 2 $ ch "1", mt "~ ~ 1 ~" ])
+        ]
+        
+      fx = 
+        [ ("fill", fast 2)
+        , ("octup", (|+ note 12)) 
+        , ("octdown", (|- note 12)) 
+        , ("swing", iter 4) -- Shifts the groove to create a dragging feel
+        , ("delay", stut 3 0.5 (3/16)) 
+        , ("chord", superimpose (|+ note 7))
+        , ("staccato", (# legato 0.15))
+        , ("ply", ply 2) -- Rapidly re-triggers notes for a "chopped" effect
+        ]
+        
+  xfadeIn 1 2 $ ur 8 (
+    "[pad, bass, drums, chords:staccato] \
+    \[pad, bass2, drums, chords:swing, lead:ply] \
+    \[pad, bass:octup, break, chords:staccato] \
+    \[pad, break:fill, bass2, lead:delay, chords:chord]"
+    ) parts fx

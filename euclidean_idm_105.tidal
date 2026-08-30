@@ -1,0 +1,40 @@
+do
+  -- 105 BPM for an IDM / Glitch-hop feel
+  interpolateIn "tempo" 2 $ cps (105/60/4)
+  
+  let parts = 
+        [ -- Bass: Uses a 5-step euclidean rhythm over an 8-step grid
+          ("bass", note (scale "minor" "0(3,8) -2(5,8) ~ 3" |+ "d3") # bass)
+          
+          -- Pluck: 7 hits over 16 steps creates a rolling, slightly off-kilter arpeggio
+        , ("pluck", struct "t(7,16)" $ note (fit 1 [0, 2, 3, 5, 7] "0 1 2 3" |+ "d4") # pluck)
+          
+          -- Drone: Slow evolving minor progression
+        , ("drone", slow 4 $ note "<[d3, f3, a3] [c3, e3, g3]>" # drone # legato 1.5)
+          
+          -- Lead: Extremely sparse, fragmented melody using multiple polyrhythms
+        , ("lead", struct "~ t(5,8,1) ~ t(3,8)" $ note (scale "minor" "7 <8 5> 4" |+ "d5") # lead)
+
+          -- Drums: Glitchy and syncopated, leaning on the toms and open hats
+        , ("drums", stack [ bd "1(3,8)", sn "~ 1(5,8) ~ 1", ch "1*16", oh "~ ~ 1 ~" ])
+          
+          -- Break: A more rigid, driving alternative beat
+        , ("break", stack [ bd "1*2", cp "~ 1 ~ 1", ch "1(11,16)", mt "1(3,8)" ])
+        ]
+        
+      fx = 
+        [ ("fill", fast 2)
+        , ("polymeter", iter 5) -- Shifts the pattern starting point by 1/5th each cycle
+        , ("octup", (|+ note 12)) 
+        , ("delay", stut 4 0.5 (1/16))
+        , ("chord", superimpose (|+ note 7))
+        , ("staccato", (# legato 0.2))
+        , ("sustain", (# legato 2))
+        ]
+        
+  xfadeIn 1 2 $ ur 8 (
+    "[drone, bass, drums, pluck:staccato] \
+    \[drone, bass:polymeter, drums:delay, pluck:chord] \
+    \[drone, break, bass:octup, lead:delay] \
+    \[drone:sustain, break:fill, pluck:polymeter, lead:chord]"
+    ) parts fx

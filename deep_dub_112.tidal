@@ -1,0 +1,40 @@
+do
+  -- 112 BPM for a hypnotic, spacious Deep Dub Techno feel
+  interpolateIn "tempo" 2 $ cps (112/60/4)
+  
+  let parts = 
+        [ -- Bass: Immensely sparse, hitting only on the 1 and the very end of the bar
+          ("bass", note "c2 ~ ~ ~ ~ ~ eb2 <f2 g2>" # bass)
+          
+          -- Chords: The classic dub techno minor chord stab
+        , ("chords", struct "~ t ~ ~" $ note (scale "minor" "[0, 2, 4]" |+ "c4") # pluck)
+          
+          -- Lead: Distant, echoing melody
+        , ("lead", struct "~ ~ ~ t(3,8)" $ note (scale "minor" "<7 4 5 2>" |+ "c5") # lead)
+
+          -- Pad: Very wide, 4-note extended chords acting as a bed of sound
+        , ("pad", slow 8 $ note "<[c3, eb3, g3, bb3] [ab2, c3, eb3, g3]>" # drone # legato 2)
+          
+          -- Drums: A kick on the 1, claps on the 3, and a heavily swung shaker/hat feel
+        , ("drums", stack [ bd "1 ~ ~ ~ ~ ~ ~ ~", cp "~ ~ 1 ~", ch "1*8", oh "~ ~ ~ 1(3,8)" ])
+          
+          -- Break: Slightly more active drums for section changes
+        , ("break", stack [ bd "1(3,8)", cp "~ 1 ~ 1", ch "1*16", lt "~ 1 ~ ~" ])
+        ]
+        
+      fx = 
+        [ ("fill", fast 2)
+        , ("dubdelay", stut 4 0.6 (3/16)) -- Dotted-eighth delay creates the classic dub rhythm
+        , ("octup", (|+ note 12)) 
+        , ("echoOct", off 0.25 (|+ note 12)) 
+        , ("chord", superimpose (|+ note 7))
+        , ("staccato", (# legato 0.2))
+        , ("space", iter 4)
+        ]
+        
+  xfadeIn 1 2 $ ur 8 (
+    "[pad, bass, drums, chords:dubdelay] \
+    \[pad, bass, drums, chords:staccato, lead:echoOct] \
+    \[pad, bass:octup, break, chords:dubdelay, lead:space] \
+    \[pad, bass, break:fill, chords:chord, lead:dubdelay]"
+    ) parts fx
