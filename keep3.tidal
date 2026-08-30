@@ -1,0 +1,45 @@
+do
+  -- Dropped to 85 BPM for a moody, trip-hop/downtempo feel
+  setcps (85/60/4)
+  let parts = 
+        [ -- Bass 1: Sparse, heavy, leaving lots of space
+          ("bass", note (scale "minor" "0 ~ ~ -2" |+ "c2") # bass)
+          
+          -- Bass 2: A bit more movement for the turnarounds
+        , ("bass2", note (scale "minor" "0 ~ [~ 3] -1" |+ "c2") # bass)
+          
+          -- Chords: Slow, stabby minor chords on the off-beats
+        , ("chords", struct "~ t ~ ~" $ note (scale "minor" "[0, 2, 4]" |+ "c3") # pluck)
+        
+          -- Lead: Ethereal and sparse melodic fragments
+        , ("lead", struct "~ ~ ~ t(3,8)" $ note (scale "minor" "<7 4 5 2>" |+ "c4") # lead)
+
+          -- Pad: Deep underlying minor progression, very slow changes
+        , ("pad", slow 8 $ note "<[c3, eb3, g3] [ab2, c3, eb3]>" # drone # legato 1)
+          
+          -- Drums: Laid back hip-hop/trip-hop beat
+        , ("drums", stack [ bd "1 ~ ~ <~ 1>", sn "~ ~ 1 ~", ch "1*8", oh "~ ~ ~ 1" ])
+          
+          -- Break: Bouncier, filled-out toms and hats for transitions
+        , ("break", stack [ bd "1(3,8)", sn "~ 1 ~ 1", ch "1*16", lt "~ 1 ~ ~", mt "~ ~ 1 ~" ])
+        ]
+      fx = 
+        [ ("fill", fast 2)
+        , ("drop", slow 2)
+        , ("octup", (|+ note 12)) 
+        , ("octdown", (|- note 12)) 
+        , ("dubdelay", stut 4 0.6 (3/16)) -- Dotted-eighth delay for a dubby feel
+        , ("echoOct", off 0.25 (|+ note 12)) 
+        , ("echo5th", off 0.375 (|+ note 7)) 
+        , ("chord", superimpose (|+ note 7))
+        , ("staccato", (# legato 0.2))
+        , ("sustain", (# legato 2))
+        , ("shift", iter 4) 
+        , ("jumble", jux rev) 
+        ]
+  d1 $ ur 8 (
+    "[pad, bass, drums, chords:staccato] \
+    \[pad, bass, drums, chords:dubdelay, lead] \
+    \[pad, bass2, drums:drop, chords:staccato] \
+    \[pad, break, bass2:octup, lead:echoOct, chords:jumble]"
+    ) parts fx

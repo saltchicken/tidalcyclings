@@ -1,0 +1,30 @@
+-- setcps(1.2)
+-- d1 $ note ("c4 e4 g4" |+ "<0 5 0 -5>") # bass # gain 0.9
+-- d4 $ slow 16 $ note ("c4 e4") # drone
+-- resetCycles
+
+
+-- Your existing setup
+setcps(1.2)
+d1 $ note ("c4?0.1 e4?0.1 g4?0.1" |+ "<0 5 0 -5>") # bass # gain 0.9
+d4 $ slow 16 $ note ("c4 e4") # drone
+
+-- The 32-bar Lead Arrangement
+d2 $ seqPLoop [
+  -- Bars 1-8 (Cycles 0-8): The Tease
+  -- Sparse and slow, using probability to introduce the motif
+  (0, 8, slow 2 $ note "c5 ~ e5?0.7 ~ g5 ~ ~ c5?0.4" |+ "<0 5 0 -5>"),
+
+  -- Bars 9-16 (Cycles 8-16): The Build
+  -- A rolling arpeggio that locks into the cycle
+  (8, 16, note "c5 e5 g5 [c6 g5]" |+ "<0 5 0 -5>"),
+
+  -- Bars 17-24 (Cycles 16-24): The Climax
+  -- Double speed (fast 2), jumping into higher octaves with rhythmic gaps
+  (16, 24, fast 2 $ note "c5 [e5 g5] c6 [e6? g5] c5? e5 ~ <c6 b5>" |+ "<0 5 0 -5>"),
+
+  -- Bars 25-32 (Cycles 24-32): The Breakdown
+  -- Slows back down and randomly drops 60% of the notes to fade out
+  (24, 32, degradeBy 0.6 $ slow 2 $ note "c6 g5 e5 c5" |+ "<0 5 0 -5>")
+
+] # lead # gain 0.85

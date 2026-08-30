@@ -31,6 +31,7 @@ instance Tidally where tidal = tidalInst
 let lead = s "rust" # midichan 0
     bass = s "rust" # midichan 1
     pluck = s "rust" # midichan 2
+    drone = s "rust" # midichan 3
     drums = s "rust" # midichan 9
 
     bd pat = midinote (pat + 35) # drums
@@ -42,5 +43,5 @@ let lead = s "rust" # midichan 0
     mt pat = midinote (pat + 44) # drums
     ht pat = midinote (pat + 47) # drums
 
-    metro = p "metronome" $ midinote "42" # r10
+    metro = p "metronome" $ midinote "42" # drums
 :}
