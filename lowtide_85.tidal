@@ -9,10 +9,10 @@ do
         , ("bass2", note (scale "minor" "0 ~ [~ 3] -1" |+ "c2") # bass)
           
           -- Chords: Slow, stabby minor chords on the off-beats
-        , ("chords", struct "~ t ~ ~" $ note (scale "minor" "[0, 2, 4]" |+ "c3") # pluck)
+        , ("chords", struct "~ t ~ ~" $ note (scale "minor" "[0, 2, 4]" |+ "c3") # string)
         
           -- Lead: Ethereal and sparse melodic fragments
-        , ("lead", struct "~ ~ ~ t(3,8)" $ note (scale "minor" "<7 4 5 2>" |+ "c4") # lead)
+        , ("lead", struct "~ ~ ~ t(3,8)" $ note (scale "minor" "<7 4 5 2>" |+ "c4") # flute)
 
           -- Pad: Deep underlying minor progression, very slow changes
         , ("pad", slow 8 $ note "<[c3, eb3, g3] [ab2, c3, eb3]>" # drone # legato 1)
