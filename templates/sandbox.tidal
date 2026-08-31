@@ -1,0 +1,18 @@
+let root = "f1"
+setcps(100/60/4)
+
+(
+d1 $ slow 3 $ stut 4 0.9 (1/6) $ off 0.25 (|+ note 12) $ note ("[36 26]" |+ root)
+  # pluck
+  # legato 2.0
+  # gain (range 0.8 0.9 $ slow 3 sine)
+)
+
+(
+d5 $ off 0.125 (|+ note 5) $ slow 8 $ note (scale "major" "5 7" |+ root) 
+  # lead 
+  # gain 1.2
+)
+
+d6 $ slow 16 $ note (scale "major" ("0 4 0 5" |+ "[0, 2, 4]") |+ root |+ 24) # drone
+resetCycles
