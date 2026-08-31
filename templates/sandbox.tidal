@@ -1,8 +1,8 @@
-let root = "f1"
+let root = "g2"
 setcps(100/60/4)
 
 (
-d1 $ slow 3 $ stut 4 0.9 (1/6) $ off 0.25 (|+ note 12) $ note ("[36 26]" |+ root)
+d1 $ slow 3 $ stut 4 0.9 (1/6) $ off 0.25 (|+ note 12) $ note ("[36?0.4 26?0.4]" |+ root)
   # pluck
   # legato 2.0
   # gain (range 0.8 0.9 $ slow 3 sine)
